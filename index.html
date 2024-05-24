@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+  
+  <title>Frontend Mentor | Age calculator app</title>
+
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <style>
+    /* .attribution { font-size: 11px; text-align: center; }
+    .attribution a { color: hsl(228, 45%, 44%); } */
+
+    *{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body{
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      display: grid;
+      place-content: center;
+      min-height: 100vh;
+      background-color: #f3f3f3;
+
+    }
+
+    .main-container{
+max-width: 800px;
+background-color: white;
+padding: 50px;
+border-radius:10px 10px 100px 10px;
+
+/* background-color: red; */
+     
+    }
+
+    .iput-container{
+      display: flex;
+      justify-content: flex-start;
+      width: 100%;
+      column-gap: 30px;
+      border-bottom: 1px solid hsl(0, 0%, 86%);
+      padding-block: 40px;
+      margin-bottom: 50px;
+      position: relative;
+    }
+
+    .button-sumbit{
+      display: grid;
+      place-content: center;
+      background-color:hsl(259, 100%, 65%) ;
+      width: 50px;
+      padding-left: 7px;
+      height: 50px;
+      border-radius: 100vw;
+      position: absolute;
+      bottom: -25px;
+      right: -25px;
+  
+    }
+    .button-sumbit:hover{
+      background-color: black;
+      cursor: pointer;
+    }
+
+    .button-sumbit img{
+      width: 80%;
+    }
+    span,.age-container p{
+      font-size: 3rem;
+      font-weight: 900;
+      
+    }
+
+    span{
+      color:  hsl(259, 100%, 65%) ;
+      
+    }
+
+    .error-display{
+      font-size: 70%;
+    }
+
+    input{
+ width: 100%;
+ height: 50px;
+ border-radius: 7px;
+ margin-block: 10px;
+ font: inherit;
+ padding: 20px;
+ font-weight: 900;
+ 
+    }
+
+    .enter-input{
+      width: 25%;
+    }
+
+    .enter-input p{
+      color: hsl(0, 1%, 44%);
+     
+    }
+
+    input + .error-display-month , input + .error-display-year,input + .error-display-day{
+      display: none;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="main-container">
+    <div class="iput-container">
+      <div class="enter-input">
+        <p class="error-display-day">DAY</p>
+        <input type="number" name="" id="day" placeholder="DD">
+        <p  class="error-display-day new">must be valid day</p>
+      </div>
+      <div class="enter-input">
+        <p class="error-display-month">MONTH</p>
+        <input type="number" name="" id="month" placeholder="MM">
+        <p  class="error-display-month new">must be a valid month</p>
+      </div>
+      <div class="enter-input">
+        <p class="error-display-year">YEAR</p>
+        <input type="number" name="" id="year" placeholder="YYYY">
+        <p  class="error-display-year new">must be a valid year</p>
+      </div>
+
+      <div class="button-sumbit">
+        <img src="./assets/images/icon-arrow.svg" alt="">
+      </div>
+     
+    </div>
+    <div class="age-container">
+<p><span class="number-years">- - </span> years</p>
+<p><span class="number-months">- - </span> months</p>
+<p><span class="number-days">- - </span> days</p>
+    </div>
+  </div>
+
+
+
+  <script>
+    const day = document.querySelector("#day")
+    const month = document.querySelector("#month")
+    const year = document.querySelector("#year")
+
+    const numberYears = document.querySelector(".number-years")
+    const numberMonth = document.querySelector(".number-months")
+    const numberDays = document.querySelector(".number-days")
+
+    const errormessageday = document.querySelectorAll(".error-display-day")
+    const errormessageyear = document.querySelectorAll(".error-display-year")
+    const errormessagemonth = document.querySelectorAll(".error-display-month")
+
+    const errormessagedaynew = document.querySelectorAll(".error-display-day.new")
+    const errormessageyearnew = document.querySelectorAll(".error-display-year.new")
+    const errormessagemonthnew = document.querySelectorAll(".error-display-month.new")
+ 
+  
+  
+
+const submitBtn = document.querySelector(".button-sumbit")
+
+const errorStyle = (errormsg,errorinp) =>{
+  errormsg.forEach(item=>{
+    item.style.color = "hsl(0, 100%, 67%)"
+    item.style.display = "block"
+
+  })
+errorinp.style.outlineColor= "hsl(0, 100%, 67%)"
+
+}
+
+const resetStyle = (errormsg,errorinp,resetnew)=>{
+  errormsg.forEach(item=>{
+    
+    item.style.display = "none"
+
+  })
+  resetnew.forEach(item=>{
+    
+    item.style.color= "hsl(0, 1%, 44%)"
+
+  })
+
+errorinp.style.outlineColor= "black"
+}
+
+submitBtn.addEventListener("click",()=>{
+  let birthday = new Date(Number(year.value),Number(month.value),Number(day.value))
+  let date = new Date(Date.now())
+
+  let  dayError;
+    let monthError;
+    let yearError;
+
+    const validate =()=>{
+      if(day.value>31 || day.value<1){
+       dayError = true
+      }else{
+        dayError = false
+      }
+
+      if(month.value>12||month.value<1){
+        monthError= true
+
+      }
+      else{
+        monthError= false
+      }
+      if(year.value>date.getFullYear()||year.value<1){
+        yearError= true
+
+      }
+      else{
+        yearError= false
+      }
+
+      return [dayError,monthError,yearError]
+      
+    }
+  let years;
+  let months;
+  let days;
+
+  if(year.value==""||month.value==""||year.value==""){
+  
+  }if(validate()[0]){
+errorStyle(errormessageday,day)
+  }else{
+    resetStyle(errormessagedaynew,day,errormessageday)
+  }
+  if(validate()[1]){
+    errorStyle(errormessagemonth,month)
+  }
+  else{
+    resetStyle(errormessagemonthnew,month,errormessagemonth)
+  }
+  if(validate()[2]){
+    errorStyle(errormessageyear,year)
+  }
+  else{
+    resetStyle(errormessageyearnew,year,errormessageyear)
+  }
+  if(validate()[0]||validate()[1]||validate()[2]){
+
+  }
+  
+  else{
+    if(date.getMonth()<birthday.getMonth()){
+   years = date.getFullYear()-birthday.getFullYear()-1
+   if(date.getDate()<birthday.getDate()){
+    months = 12 -  birthday.getMonth() +date.getMonth()
+    days = 31 - birthday.getDate() + date.getDate()
+   }else{
+    months = 12 -  birthday.getMonth() +date.getMonth() +1
+    days =date.getDate()- birthday.getDate()  
+   }
+ 
+ 
+
+
+  }
+  else{
+   years = date.getFullYear()-birthday.getFullYear()
+  
+   if(date.getDate()<birthday.getDate()){
+    months =  date.getMonth()-birthday.getMonth() 
+   
+    days = 31- birthday.getDate() + date.getDate()
+   }else{
+    months =  date.getMonth()-birthday.getMonth() +1
+    days =date.getDate()- birthday.getDate()  
+   }
+  
+  }
+  numberYears.textContent=""
+  numberDays.textContent=""
+  numberMonth.textContent=""
+
+
+  numberYears.textContent = years
+numberDays.textContent=days
+numberMonth.textContent= months
+
+  }
+
+})
+
+  
+  </script>
+
+  <!-- Day
+  DD
+
+  Month
+  MM
+
+  Year
+  YYYY
+
+  -- years
+  -- months
+  -- days -->
+  
+  <!-- <div class="attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
+    Coded by <a href="#">Your Name Here</a>.
+  </div> -->
+</body>
+</html>
